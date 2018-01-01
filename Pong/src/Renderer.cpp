@@ -23,9 +23,20 @@ bool GLLogCall(const char* function, const char* file, int line) {
 	return true;
 }
 
+Renderer::Renderer() {
+	
+	std::cout << "made it lol" << std::endl;
+
+}
+
+Renderer::Renderer(const Renderer&) {
+
+	std::cout << "dask" << std::endl;
+}
+
 Renderer::Renderer(Shader &shader) {
 
-	m_Shader = shader;
+	this->m_Shader = shader;
 	this->initRenderData();
 
 }
@@ -65,6 +76,7 @@ void Renderer::initRenderData() {
 
 
 	//Layout of buffer (how to interpt data).
+	
 	GLCall(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0));
 	GLCall(glEnableVertexAttribArray(0));
 

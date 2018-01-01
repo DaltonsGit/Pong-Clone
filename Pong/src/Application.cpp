@@ -13,7 +13,7 @@
 #include <gtc/type_ptr.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+//#include "stb_image.h"
 
 #include "Renderer.h"
 
@@ -21,6 +21,7 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "Textures.h"
+#include "Game.h"
 
 
 
@@ -74,7 +75,10 @@ static ShaderProgramSource parseShader(const std::string& filepath) {
 }*/
 
 
+void key_CallBack(GLFWwindow *window, int key, int scancode, int action, int mode);
 
+
+Game game(800, 600);
 
 int main(void)
 {
@@ -101,6 +105,8 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
+	glfwSetKeyCallback(window, key_CallBack);
+
 	//glfwSwapInterval(1);
 
 
@@ -114,7 +120,7 @@ int main(void)
 
 	
 
-	Shader shader("res/shaders/Basic.shader");
+	//Shader shader("res/shaders/Basic.shader");
 
 		//ShaderProgramSource source = parseShader("res/shaders/Basic.shader");
 		//std::cout << source.VertexSource << std::endl;
@@ -123,37 +129,58 @@ int main(void)
 		
 
 		//Shader shader(source.VertexSource, source.FragmentSource);
-	shader.loadShader();
+	//shader.loadShader();
 
 
-		int width; 
+		/*int width; 
 		int height;
 		int nrChannels;
 
-		unsigned char *data = stbi_load("res/textures/awesomeface.png", &width, &height, &nrChannels, 0);
-
+		unsigned char *data = stbi_load("D:/Programming/C++/Pong/Pong-Clone/Pong/res/textures/awesome_face.jpg", &width, &height, &nrChannels, 0);
+		*/
 			
 
-		Textures wood;
+		//Textures wood;
 
-		wood.generate(width, height, data);
+		//wood.generate(width, height, data);
 
-		Renderer square(shader);
-		Renderer square2(shader);
+		//stbi_image_free(data);
+
+		//Renderer square(shader);
+		//Renderer square2(shader);
 
 
+	//Game game(800, 600);
+	game.setUpGame();
+	std::cout << "Finished setup" << std::endl;
 
+		glEnable(GL_TEXTURE_2D);
+
+		float timeChange = 0.0f;
+		float lastFrame = 0.0f;
 
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
+
+
+			float currentFrame = glfwGetTime();
+			timeChange = currentFrame - lastFrame;
+			lastFrame = currentFrame;
+
+			glfwPollEvents();
+
+			game.processInput(timeChange);
+			game.ballMovement(timeChange);
+
 			/* Render here */
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
+			game.render();
 
 
-			square.drawEntity(wood, glm::vec2(774, 225), glm::vec2(25, 75), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-			square2.drawEntity(wood, glm::vec2(0, 225), glm::vec2(25, 75), 0.0, glm::vec3(0.0f, 0.0f, 0.0f));
+			//square.drawEntity(wood, glm::vec2(774, 225), glm::vec2(25, 75), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+			//square2.drawEntity(wood, glm::vec2(0, 225), glm::vec2(25, 75), 0.0, glm::vec3(0.0f, 0.0f, 0.0f));
 
 			
 			
@@ -169,4 +196,24 @@ int main(void)
 	
 	glfwTerminate();
 	return 0;
+}
+
+
+
+void key_CallBack(GLFWwindow * window, int key, int scancode, int action, int mode) {
+
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+	
+	if (key >= 0 && key < 1024) {
+
+		if (action == GLFW_PRESS) {
+			game.Keys[key] = GL_TRUE;
+		}
+		else if (action == GLFW_RELEASE) {
+			game.Keys[key] = GL_FALSE;
+		}
+	}
+
 }

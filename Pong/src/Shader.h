@@ -1,6 +1,8 @@
 #pragma once
 
+#include <GL/glew.h>
 #include <string>
+#include <sstream>
 
 
 struct ShaderProgramSource {
@@ -14,18 +16,28 @@ class Shader {
 
 private:
 	unsigned int compileShader(unsigned int type, const std::string& source);
-	ShaderProgramSource parseShader(const std::string& filepath);
+	void parseShader(const std::string& filepath);
 
 
 public:
+
 	unsigned int programID;
-	ShaderProgramSource source;
+	std::stringstream source;
 
 	Shader();
+	//Shader(const Shader&);
 	Shader(const char *shaderPath);
 	//void loadShader(const std::string& vertexShader, const std::string& fragmentShader);
-	void loadShader();
+	void loadShader(std::string vShader, std::string fShader);
 	~Shader();
+
+
+
+	void copy(const Shader &copyShader);
+	Shader(const Shader&) = default;
+	Shader(Shader&&) = default;
+	Shader& operator= (const Shader &equalShader);
+	//Shader& operator=(const Shader&);
 
 
 	void useShader();

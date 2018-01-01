@@ -1,25 +1,27 @@
 #include "Shader.h"
-#include "Renderer.h"
-
 
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
+#include "Renderer.h"
 
 Shader::Shader(){}
 
 Shader::Shader(const char *shaderPath) {
 
-	source = parseShader("res/shaders/Basic.shader");
+	//std::stringstream source[2];
+	parseShader("Pong-Clone/Pong/res/shaders/Basic.shader");
+	//source = parseShader("Pong-Clone/Pong/res/shaders/Basic.shader");
 }
 
 //void Shader::loadShader(const std::string& vertexShader, const std::string& fragmentShader) {
-void Shader::loadShader() {
+void Shader::loadShader(std::string vShader, std::string fShader) {
+
 
 	programID = glCreateProgram();
-	unsigned int vs = compileShader(GL_VERTEX_SHADER, source.VertexSource);
-	unsigned int fs = compileShader(GL_FRAGMENT_SHADER, source.FragmentSource);
+	unsigned int vs = compileShader(GL_VERTEX_SHADER, vShader);
+	unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fShader);
 
 
 	GLCall(glAttachShader(programID, vs));
@@ -46,6 +48,9 @@ Shader::~Shader() {
 	GLCall(glShaderSource(id, 1, &src, nullptr));
 	GLCall(glCompileShader(id));
 
+	std::cout << src << std::endl;
+
+
 	int result;
 	GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
 
@@ -67,7 +72,7 @@ Shader::~Shader() {
 	return id;
 }
 
- ShaderProgramSource Shader::parseShader(const std::string& filepath) {
+void Shader::parseShader(const std::string& filepath) {
 
 	 std::ifstream stream(filepath);
 
@@ -103,7 +108,10 @@ Shader::~Shader() {
 	 }
 
 
-	 return{ ss[0].str(), ss[1].str() };
+	 
+	 //source = ss;
+
+	 //return{ ss[0].str(), ss[1].str() };
 
  }
 
@@ -120,5 +128,22 @@ Shader::~Shader() {
 	 return programID;
 
  }
+
+ void Shader::copy(const Shader &copyShader){
+
+	 this->programID = copyShader.programID;
+
+
+
+ }
+
+ Shader& Shader::operator= (const Shader &equalShader) {
+
+	 this->programID = equalShader.programID;
+
+	 return *this;
+
+ }
+
 
 
