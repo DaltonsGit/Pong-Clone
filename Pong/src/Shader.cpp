@@ -48,6 +48,8 @@ Shader::~Shader() {
 	GLCall(glShaderSource(id, 1, &src, nullptr));
 	GLCall(glCompileShader(id));
 
+
+
 	std::cout << src << std::endl;
 
 

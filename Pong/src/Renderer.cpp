@@ -23,20 +23,20 @@ bool GLLogCall(const char* function, const char* file, int line) {
 	return true;
 }
 
-Renderer::Renderer() {
-	
-	std::cout << "made it lol" << std::endl;
+Renderer::Renderer() {}
 
-}
-
-Renderer::Renderer(const Renderer&) {
-
-	std::cout << "dask" << std::endl;
-}
+Renderer::Renderer(const Renderer&) {}
 
 Renderer::Renderer(Shader &shader) {
 
-	this->m_Shader = shader;
+	//this->m_Shader = shader;
+	/*unsigned int tempID = shader.getProgramID();
+	m_Shader.programID = tempID;
+	*/
+	//m_Shader.copy(shader);
+
+	m_Shader.programID = shader.getProgramID();
+
 	this->initRenderData();
 
 }

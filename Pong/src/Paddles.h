@@ -10,8 +10,13 @@ public:
 
 	void humanMovement(int direction, int height, float dt);
 	void aiMovement(float ballLocation, float dt);
+	float getDirection();
+	void increaseScore();
+	int getScore();
 
 private:
-	float playerVelocity = 500.0f;
+	int score = 0;
+	float playerVelocity = 300.0f;
+	int direction = 0;
 
 };

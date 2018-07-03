@@ -1,4 +1,5 @@
 #include "Paddles.h"
+#include <iostream>
 
 Paddles::Paddles()
 	: Entities() {}
@@ -12,11 +13,13 @@ void Paddles::humanMovement(int direction, int height, float dt) {
 		
 		if (this->m_Position.y >= 0) {
 			this->m_Position.y -= (playerVelocity * dt);
+			this->direction = direction;
 		}
 	}
 	else if (direction == -1) {
 		if (this->m_Position.y <= height - this->m_Size.y) {
 			this->m_Position.y += (playerVelocity * dt);
+			this->direction = direction;
 		}
 
 	}
@@ -28,11 +31,31 @@ void Paddles::aiMovement(float ballLocation, float dt) {
 	if (ballLocation < this->m_Position.y) {
 
 		this->m_Position.y -= (playerVelocity * dt);
+		this->direction = -1;
 	}
 
 	else if (ballLocation > this->m_Position.y) {
 
 		this->m_Position.y += (playerVelocity * dt);
+		this->direction = 1;
 	}
+
+}
+
+float Paddles::getDirection() {
+
+	return this->direction;
+
+}
+
+void Paddles::increaseScore() {
+
+	++this->score;
+
+}
+
+int Paddles::getScore() {
+
+	return this->score;
 
 }

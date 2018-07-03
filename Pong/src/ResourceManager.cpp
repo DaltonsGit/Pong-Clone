@@ -6,38 +6,42 @@
 std::map<std::string, Textures>    ResourceManager::m_Textures;
 std::map<std::string, Shader>       ResourceManager::m_Shaders;
 
+//Stores each shader location into memory.
 void ResourceManager::loadShader(const char *shaderFile, std::string name) {
 
 	m_Shaders[name] = loadShaderFromFile(shaderFile);
 
 }
 
+//Retreives the shader specified from memory.
 Shader ResourceManager::getShader(std::string name) {
 
 	Shader a;
 	std::cout << a.programID << std::endl;
 	std::cout << m_Shaders[name].programID << std::endl;
+	//Copies the shader being retrived.
 	a.copy(m_Shaders[name]);
 	std::cout << a.programID << std::endl;
 	return a;
-
+	
 	//return m_Shaders[name];
-
+	
 }
 
+//Stores each texture location into memory.
 void ResourceManager::loadTexture(const char *textureFile, bool alpha, std::string name) {
 
 	m_Textures[name] = loadTextureFromFile(textureFile, alpha);
-	std::cout << "lmao" << std::endl;
 
 }
 
+//Retrives the texture specified from memory
 Textures ResourceManager::getTexture(std::string name) {
 
 	return m_Textures[name];
 }
 
-
+//Retrives each shader from the shader file at the specified location and generates a shader object.
 Shader ResourceManager::loadShaderFromFile(const char *shaderFile) {
 
 	std::ifstream stream(shaderFile);
@@ -57,6 +61,7 @@ Shader ResourceManager::loadShaderFromFile(const char *shaderFile) {
 
 	while (getline(stream, line)) {
 
+		//If #shader does not equal to not found (aka #shader is in the file)
 		if (line.find("#shader") != std::string::npos) {
 
 			if (line.find("vertex") != std::string::npos)
@@ -65,6 +70,7 @@ Shader ResourceManager::loadShaderFromFile(const char *shaderFile) {
 				type = ShaderType::FRAGMENT;
 		}
 
+		//Stores shader data for each shader type based on what the type variable currently equals.
 		else {
 
 			ss[(int)type] << line << '\n';
@@ -75,6 +81,7 @@ Shader ResourceManager::loadShaderFromFile(const char *shaderFile) {
 	std::string vShader = ss[0].str();
 	std::string fShader = ss[1].str();
 
+	//Generates shader.
 	Shader shader;
 	shader.loadShader(vShader, fShader);
 
@@ -84,9 +91,11 @@ Shader ResourceManager::loadShaderFromFile(const char *shaderFile) {
 
 }
 
+//Retrives the texture from a texture file at the specified location and generates a texture object.
 Textures ResourceManager::loadTextureFromFile(const char *texFile, bool alpha) {
 
 	Textures texture;
+
 	if (alpha == true) {
 
 		texture.internal_Format = GL_RGBA;
@@ -94,23 +103,16 @@ Textures ResourceManager::loadTextureFromFile(const char *texFile, bool alpha) {
 
 	}
 
-	std::cout << "Tex made 1" << std::endl;
-
 	int width;
 	int height;
 	int nrChannels;
 
 	unsigned char *data = stbi_load(texFile, &width, &height, &nrChannels, 0);
 
-	std::cout << "Tex made 2" << std::endl;
 
 	texture.generate(width, height, data);
 
-	std::cout << "Tex made 3" << std::endl;
-
 	stbi_image_free(data);
-
-	std::cout << "lol" << std::endl;
 
 	return texture;
 

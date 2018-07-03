@@ -171,12 +171,22 @@ int main(void)
 			glfwPollEvents();
 
 			game.processInput(timeChange);
-			game.ballMovement(timeChange);
+			game.update(timeChange);
+			//game.processInput(timeChange);
+			//game.update(timeChange);
+			//game.ballMovement(timeChange);
 
 			/* Render here */
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			game.render();
+
+			/*if (game.getGameOver() == true) {
+
+
+				glfwDestroyWindow(window);
+
+			}*/
 
 
 			//square.drawEntity(wood, glm::vec2(774, 225), glm::vec2(25, 75), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
