@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entities.h"
+#include <vector>
 
 class Ball : public Entities
 {
@@ -17,6 +18,9 @@ public:
 	bool leftScored = false;
 	bool rightScore = false;
 
+	std::vector <float>  getBallVertices();
+	std::vector <unsigned int>  getBallIndices();
+
 
 	
 
@@ -27,6 +31,22 @@ private:
 	int m_Hits = 0;
 
 	void resetBall();
+
+	std::vector <float> ballVertices = {
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
+
+		//0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f
+		//1.0f, 0.0f, 1.0f, 0.0f
+	};
+
+	std::vector <unsigned int>  ballIndices = {
+		0, 1, 2,
+		1, 3, 0
+
+	};
 
 
 

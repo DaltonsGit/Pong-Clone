@@ -11,6 +11,8 @@
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 #include "Textures.h"
+#include <map>
+#include <vector>
 
 
 
@@ -31,14 +33,16 @@ public:
 	Renderer(const Renderer&);
 	~Renderer();
 
-	void drawEntity(Textures &textures, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color);
+	void drawEntity(Textures &textures, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color, std::string VAOName);
+
+	void initRenderData(std::vector <float> vertices, std::vector <unsigned int> indices, std::string name);
 
 private:
 	Shader m_Shader;
-	unsigned int m_quadVAO;
-	IndexBuffer m_ebo;
+	//unsigned int m_quadVAO;
 
-	void initRenderData();
+	//void initRenderData();
+	static std::map<std::string, unsigned int> m_quadVAO;
 
 };
 

@@ -104,6 +104,18 @@ int Ball::getHits() {
 
 }
 
+std::vector <float> Ball::getBallVertices() {
+
+	return ballVertices;
+
+}
+
+std::vector <unsigned int> Ball::getBallIndices() {
+
+	return ballIndices;
+
+}
+
 /*void Ball::checkCollision(glm::vec2 objectLocation, glm::vec2 objectSize) {
 
 	if(m_Position.y + m_Size.y)

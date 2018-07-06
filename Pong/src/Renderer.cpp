@@ -23,6 +23,8 @@ bool GLLogCall(const char* function, const char* file, int line) {
 	return true;
 }
 
+std::map<std::string, unsigned int>       Renderer::m_quadVAO;
+
 Renderer::Renderer() {}
 
 Renderer::Renderer(const Renderer&) {}
@@ -37,11 +39,43 @@ Renderer::Renderer(Shader &shader) {
 
 	m_Shader.programID = shader.getProgramID();
 
-	this->initRenderData();
+
+	//EDITED OUT FOR TEST
+
+	//this->initRenderData();
 
 }
 
-void Renderer::initRenderData() {
+void Renderer::initRenderData(std::vector <float> vertices, std::vector <unsigned int> indices, std::string name) {
+
+	unsigned int VAO;
+
+
+	GLCall(glGenVertexArrays(1, &VAO));
+	GLCall(glBindVertexArray(VAO));
+
+
+	//Gives GPU data for the thing we want to draw.
+	VertexBuffer vb(vertices, sizeof(vertices));
+
+
+	//bind buffer
+	GLCall(IndexBuffer temp(indices, 6));
+
+
+	//Layout of buffer (how to interpt data).
+	GLCall(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0));
+	GLCall(glEnableVertexAttribArray(0));
+
+	m_quadVAO[name] = VAO;
+
+	vb.Unbind();
+	glBindVertexArray(0);
+
+
+}
+
+/*void Renderer::initRenderData() {
 
 
 	float vertices[] = {
@@ -76,7 +110,7 @@ void Renderer::initRenderData() {
 
 
 	//Layout of buffer (how to interpt data).
-	
+
 	GLCall(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0));
 	GLCall(glEnableVertexAttribArray(0));
 
@@ -88,9 +122,9 @@ void Renderer::initRenderData() {
 
 
 
-}
+}*/
 
-void Renderer::drawEntity(Textures &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color ) {
+void Renderer::drawEntity(Textures &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color, std::string VAOName) {
 
 
 	m_Shader.useShader();
@@ -122,8 +156,8 @@ void Renderer::drawEntity(Textures &texture, glm::vec2 position, glm::vec2 size,
 	glActiveTexture(GL_TEXTURE0);
 	texture.bind();
 
-	GLCall(glBindVertexArray(m_quadVAO));
-	//m_ebo.Bind();
+	GLCall(glBindVertexArray(m_quadVAO[VAOName]));
+
 
 	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 	//GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
@@ -136,6 +170,6 @@ void Renderer::drawEntity(Textures &texture, glm::vec2 position, glm::vec2 size,
 
 Renderer::~Renderer() {
 
-	glDeleteVertexArrays(1, &m_quadVAO);
+	//glDeleteVertexArrays(1, &m_quadVAO);
 
 }

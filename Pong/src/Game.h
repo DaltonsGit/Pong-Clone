@@ -11,6 +11,8 @@
 //#include "Entities.h"
 #include "Ball.h"
 #include "Paddles.h"
+#include "Text.h"
+
 
 
 const glm::vec2 player_Size(25, 100);
@@ -49,6 +51,8 @@ private:
 	Paddles *player1;
 	Paddles *player2;
 	Ball *ball;
+
+	Ball *test;
 
 	bool firstRound = false;
 	bool p1Won = false;

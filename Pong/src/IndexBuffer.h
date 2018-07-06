@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 class IndexBuffer {
 
 private:
@@ -9,7 +11,7 @@ private:
 public:
 	IndexBuffer();
 	//Size always in bytes, count means element count.
-	IndexBuffer(const unsigned int* data, unsigned int count);
+	IndexBuffer(/*const unsigned int* data*/ std::vector<unsigned int> &data , unsigned int count);
 	~IndexBuffer();
 
 	void Bind() const;

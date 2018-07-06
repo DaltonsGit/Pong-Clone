@@ -1,5 +1,4 @@
 #include "Paddles.h"
-#include <iostream>
 
 Paddles::Paddles()
 	: Entities() {}
@@ -57,5 +56,18 @@ void Paddles::increaseScore() {
 int Paddles::getScore() {
 
 	return this->score;
+
+}
+
+std::vector <float> Paddles::getPaddleVertices() {
+
+	
+	return paddleVertices;
+
+}
+
+std::vector <unsigned int> Paddles::getPaddlesIndices() {
+
+	return paddlesIndices;
 
 }

@@ -22,6 +22,7 @@ Shader ResourceManager::getShader(std::string name) {
 	//Copies the shader being retrived.
 	a.copy(m_Shaders[name]);
 	std::cout << a.programID << std::endl;
+
 	return a;
 	
 	//return m_Shaders[name];
@@ -31,7 +32,8 @@ Shader ResourceManager::getShader(std::string name) {
 //Stores each texture location into memory.
 void ResourceManager::loadTexture(const char *textureFile, bool alpha, std::string name) {
 
-	m_Textures[name] = loadTextureFromFile(textureFile, alpha);
+
+		m_Textures[name] = loadTextureFromFile(textureFile, alpha);
 
 }
 
@@ -40,6 +42,23 @@ Textures ResourceManager::getTexture(std::string name) {
 
 	return m_Textures[name];
 }
+
+
+void ResourceManager::loadCharacters(bool alpha) {
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	for (int i = 0; i < 128; ++i) {
+
+		Text x;
+
+		x.generateCharacters(i);
+		m_Characters[i] = x;
+	}
+
+	
+}
+
 
 //Retrives each shader from the shader file at the specified location and generates a shader object.
 Shader ResourceManager::loadShaderFromFile(const char *shaderFile) {
@@ -118,4 +137,5 @@ Textures ResourceManager::loadTextureFromFile(const char *texFile, bool alpha) {
 
 
 }
+
 
