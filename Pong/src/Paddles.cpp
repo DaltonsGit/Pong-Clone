@@ -25,18 +25,24 @@ void Paddles::humanMovement(int direction, int height, float dt) {
 
 }
 
-void Paddles::aiMovement(float ballLocation, float dt) {
+void Paddles::aiMovement(float ballLocation, int height, float dt) {
 
 	if (ballLocation < this->m_Position.y) {
 
-		this->m_Position.y -= (playerVelocity * dt);
-		this->direction = -1;
+		if (this->m_Position.y >= 0) {
+
+			this->m_Position.y -= (playerVelocity * dt);
+			this->direction = -1;
+		}
 	}
 
 	else if (ballLocation > this->m_Position.y) {
 
-		this->m_Position.y += (playerVelocity * dt);
-		this->direction = 1;
+		if (this->m_Position.y <= height - this->m_Size.y) {
+
+			this->m_Position.y += (playerVelocity * dt);
+			this->direction = 1;
+		}
 	}
 
 }
@@ -50,6 +56,12 @@ float Paddles::getDirection() {
 void Paddles::increaseScore() {
 
 	++this->score;
+
+}
+
+void Paddles::resetScore()
+{
+	score = 0;
 
 }
 

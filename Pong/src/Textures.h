@@ -22,7 +22,7 @@ public:
 
 	Textures();
 
-	void generate(unsigned int width, unsigned int height, unsigned char *date);
+	void generate(unsigned int width, unsigned int height, unsigned char *date, unsigned int intern, unsigned int image);
 
 	void bind() const;
 

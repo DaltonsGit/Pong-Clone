@@ -11,19 +11,10 @@
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 #include "Textures.h"
+#include "Text.h"
+
 #include <map>
 #include <vector>
-
-
-
-#define ASSERT(x) if (!(x)) __debugbreak();
-#define GLCall(x) GLClearError();\
-	x;\
-	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
-
-void GLClearError(); 
-
-bool GLLogCall(const char* function, const char* file, int line); 
 
 class Renderer {
 
@@ -37,11 +28,14 @@ public:
 
 	void initRenderData(std::vector <float> vertices, std::vector <unsigned int> indices, std::string name);
 
+	void updateShader(Shader &shader);
+
+	void drawText(std::map<char,Text> &character, std::string word, glm::vec2 position, float scale, glm::vec3 color);
+
+
 private:
 	Shader m_Shader;
-	//unsigned int m_quadVAO;
 
-	//void initRenderData();
 	static std::map<std::string, unsigned int> m_quadVAO;
 
 };

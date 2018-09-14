@@ -5,24 +5,6 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx/string_cast.hpp>
 
-void GLClearError() {
-
-	while (glGetError() != GL_NO_ERROR);
-
-}
-
-bool GLLogCall(const char* function, const char* file, int line) {
-
-	while (GLenum error = glGetError()) {
-
-		std::cout << "[OpenGl Error] (" << error << ")" << function
-			<< " " << file << ":" << line << std::endl;
-		return false;
-
-	}
-	return true;
-}
-
 std::map<std::string, unsigned int>       Renderer::m_quadVAO;
 
 Renderer::Renderer() {}
@@ -31,18 +13,7 @@ Renderer::Renderer(const Renderer&) {}
 
 Renderer::Renderer(Shader &shader) {
 
-	//this->m_Shader = shader;
-	/*unsigned int tempID = shader.getProgramID();
-	m_Shader.programID = tempID;
-	*/
-	//m_Shader.copy(shader);
-
 	m_Shader.programID = shader.getProgramID();
-
-
-	//EDITED OUT FOR TEST
-
-	//this->initRenderData();
 
 }
 
@@ -51,8 +22,8 @@ void Renderer::initRenderData(std::vector <float> vertices, std::vector <unsigne
 	unsigned int VAO;
 
 
-	GLCall(glGenVertexArrays(1, &VAO));
-	GLCall(glBindVertexArray(VAO));
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
 
 
 	//Gives GPU data for the thing we want to draw.
@@ -60,12 +31,12 @@ void Renderer::initRenderData(std::vector <float> vertices, std::vector <unsigne
 
 
 	//bind buffer
-	GLCall(IndexBuffer temp(indices, 6));
+	IndexBuffer temp(indices, 6);
 
 
 	//Layout of buffer (how to interpt data).
-	GLCall(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0));
-	GLCall(glEnableVertexAttribArray(0));
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
+	glEnableVertexAttribArray(0);
 
 	m_quadVAO[name] = VAO;
 
@@ -75,66 +46,105 @@ void Renderer::initRenderData(std::vector <float> vertices, std::vector <unsigne
 
 }
 
-/*void Renderer::initRenderData() {
+
+void Renderer::updateShader(Shader &shader) {
+
+	m_Shader.programID = shader.getProgramID();
+
+}
 
 
-	float vertices[] = {
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 0.0f, 0.0f,
+void Renderer::drawText(std::map<char,Text> &characters, std::string word, glm::vec2 position, float scale, glm::vec3 color) {
 
-		//0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f
-		//1.0f, 0.0f, 1.0f, 0.0f
-	};
 
-	unsigned int indices[] = {
-		0, 1, 2,
-		1, 3, 0
+	m_Shader.useShader();
 
-	};
+	glActiveTexture(GL_TEXTURE0);
 
+	unsigned int VAO;
+
+	glGenVertexArrays(1, &VAO);
+
+	VertexBuffer vb;
+
+	glBindVertexArray(VAO);
+
+	vb.Bind();
+
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, 0);
 	
-	GLCall(glGenVertexArrays(1, &m_quadVAO));
-	GLCall(glBindVertexArray(m_quadVAO));
-
-
-	//Gives GPU data for the thing we want to draw.
-	
-	//VertexBuffer vb(vertices, 3 * 2 * sizeof(float));
-	VertexBuffer vb(vertices, sizeof(vertices));
-
-
-	//bind buffer
-	GLCall(IndexBuffer temp(indices, 6));
-
-
-	//Layout of buffer (how to interpt data).
-
-	GLCall(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0));
-	GLCall(glEnableVertexAttribArray(0));
-
-
 	vb.Unbind();
-	glBindVertexArray(0);
-
 	
 
 
+	glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
 
-}*/
+	int orth = glGetUniformLocation(m_Shader.getProgramID(), "projection2");
+	glUniformMatrix4fv(orth, 1, GL_FALSE, glm::value_ptr(projection));
+
+
+	int tex = glGetUniformLocation(m_Shader.getProgramID(), "textColor2");
+	glUniform3f(tex, 0.5, 0.8f, 0.2f);
+
+
+	for(int i = 0; i < word.length(); ++i) {
+
+
+		Text temp = characters[word[i]];
+		
+		GLfloat x = position.x + temp.getBearing().x * scale;
+		GLfloat y = position.y - (temp.getSize().y - temp.getBearing().y) * scale;
+
+		GLfloat w = temp.getSize().x * scale;
+		GLfloat h = temp.getSize().y * scale;
+
+		std::vector <GLfloat> vertices = {
+
+			x, y + h, 0.0f, 0.0f,
+			x, y, 0.0f, 1.0f,
+			x + w, y, 1.0f, 1.0f,
+
+			x, y + h, 0.0f, 0.0f,
+			x + w, y, 1.0f, 1.0f,
+			x + w, y + h, 1.0f, 0.0f
+
+		};
+
+		glBindTexture(GL_TEXTURE_2D, temp.getTextureID());
+
+		vb.Bind();
+		vb.subData(vertices);
+
+		vb.Unbind();
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		position.x += (temp.getAdvance() >> 6) * scale;
+
+	}
+
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+		
+
+
+
+}
 
 void Renderer::drawEntity(Textures &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color, std::string VAOName) {
 
 
 	m_Shader.useShader();
 
-	GLCall(glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(800),
-		static_cast<GLfloat>(600), 0.0f, -1.0f, 1.0f));
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(800),
+		static_cast<GLfloat>(600), 0.0f, -1.0f, 1.0f);
 
 
 	int orth = glGetUniformLocation(m_Shader.getProgramID(), "Projection");
-	GLCall(glUniformMatrix4fv(orth, 1, GL_FALSE, glm::value_ptr(projection)));
+	glUniformMatrix4fv(orth, 1, GL_FALSE, glm::value_ptr(projection));
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(position, 0.0f));
@@ -147,21 +157,20 @@ void Renderer::drawEntity(Textures &texture, glm::vec2 position, glm::vec2 size,
 	model = glm::scale(model, glm::vec3(size, 1.0f));
 
 	int location = glGetUniformLocation(m_Shader.getProgramID(), "model");
-	GLCall(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(model)));
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(model));
 
 	int colorLocation = glGetUniformLocation(m_Shader.getProgramID(), "u_color");
-	GLCall(glUniform3f(colorLocation, color.x, color.y, color.z));
+	glUniform3f(colorLocation, color.x, color.y, color.z);
 
 
 	glActiveTexture(GL_TEXTURE0);
 	texture.bind();
 
-	GLCall(glBindVertexArray(m_quadVAO[VAOName]));
+	glBindVertexArray(m_quadVAO[VAOName]);
 
 
-	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-	//GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
-	GLCall(glBindVertexArray(0));
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 
 
 }
@@ -170,6 +179,5 @@ void Renderer::drawEntity(Textures &texture, glm::vec2 position, glm::vec2 size,
 
 Renderer::~Renderer() {
 
-	//glDeleteVertexArrays(1, &m_quadVAO);
-
+	
 }

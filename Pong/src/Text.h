@@ -6,11 +6,20 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
+#include <vector>
+#include "Textures.h"
+
 class Text 
 {
 public:
 	Text();
     void generateCharacters(int characater);
+	void generateTexture();
+
+	glm::ivec2 getSize();
+	glm::ivec2 getBearing();
+	unsigned int getAdvance();
+	unsigned int getTextureID();
 
 	FT_Face getFace();
 

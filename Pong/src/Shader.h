@@ -25,9 +25,7 @@ public:
 	std::stringstream source;
 
 	Shader();
-	//Shader(const Shader&);
 	Shader(const char *shaderPath);
-	//void loadShader(const std::string& vertexShader, const std::string& fragmentShader);
 	void loadShader(std::string vShader, std::string fShader);
 	~Shader();
 
@@ -37,8 +35,6 @@ public:
 	Shader(const Shader&) = default;
 	Shader(Shader&&) = default;
 	Shader& operator= (const Shader &equalShader);
-	//Shader& operator=(const Shader&);
-
 
 	void useShader();
 

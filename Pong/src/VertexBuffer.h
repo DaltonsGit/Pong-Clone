@@ -8,7 +8,10 @@ private:
 
 public:
 	VertexBuffer();
-	VertexBuffer(/*const void* data*/ std::vector<float> &data, unsigned int size);
+	VertexBuffer(std::vector<float> &data, unsigned int size);
+
+	void subData(std::vector<float> data);
+
 	~VertexBuffer();
 
 	void Bind() const;

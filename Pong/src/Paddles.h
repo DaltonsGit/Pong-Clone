@@ -10,9 +10,10 @@ public:
 	Paddles(glm::vec2 pos, glm::vec2 size, Textures sprite);
 
 	void humanMovement(int direction, int height, float dt);
-	void aiMovement(float ballLocation, float dt);
+	void aiMovement(float ballLocation, int height, float dt);
 	float getDirection();
 	void increaseScore();
+	void resetScore();
 	int getScore();
 
 	std::vector <float>  getPaddleVertices();
@@ -20,7 +21,7 @@ public:
 
 private:
 	int score = 0;
-	float playerVelocity = 300.0f;
+	float playerVelocity = 500.0f;
 	int direction = 0;
 
 	std::vector <float> paddleVertices = {
@@ -28,10 +29,7 @@ private:
 		0.0f, 1.0f, 0.0f, 1.0f, 
 		1.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 0.0f,
-
-		//0.0f, 1.0f, 0.0f, 1.0f,
 		1.0f, 1.0f, 1.0f, 1.0f
-		//1.0f, 0.0f, 1.0f, 0.0f
 	};
 
 	std::vector <unsigned int>  paddlesIndices = {

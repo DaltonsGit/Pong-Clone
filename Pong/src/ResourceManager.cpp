@@ -5,6 +5,7 @@
 
 std::map<std::string, Textures>    ResourceManager::m_Textures;
 std::map<std::string, Shader>       ResourceManager::m_Shaders;
+std::map<char, Text>				ResourceManager::m_Characters;
 
 //Stores each shader location into memory.
 void ResourceManager::loadShader(const char *shaderFile, std::string name) {
@@ -17,15 +18,11 @@ void ResourceManager::loadShader(const char *shaderFile, std::string name) {
 Shader ResourceManager::getShader(std::string name) {
 
 	Shader a;
-	std::cout << a.programID << std::endl;
-	std::cout << m_Shaders[name].programID << std::endl;
-	//Copies the shader being retrived.
 	a.copy(m_Shaders[name]);
-	std::cout << a.programID << std::endl;
 
 	return a;
 	
-	//return m_Shaders[name];
+
 	
 }
 
@@ -51,12 +48,21 @@ void ResourceManager::loadCharacters(bool alpha) {
 	for (int i = 0; i < 128; ++i) {
 
 		Text x;
+		Textures charTexture;
+
 
 		x.generateCharacters(i);
-		m_Characters[i] = x;
+		m_Characters[(char) i] = x;
+
 	}
 
 	
+}
+
+Text ResourceManager::getCharacters(char character) {
+
+	return m_Characters[character];
+
 }
 
 
@@ -83,10 +89,13 @@ Shader ResourceManager::loadShaderFromFile(const char *shaderFile) {
 		//If #shader does not equal to not found (aka #shader is in the file)
 		if (line.find("#shader") != std::string::npos) {
 
-			if (line.find("vertex") != std::string::npos)
+			if (line.find("vertex") != std::string::npos) 
 				type = ShaderType::VERTEX;
-			else if (line.find("fragment") != std::string::npos)
+				
+
+			else if (line.find("fragment") != std::string::npos) 
 				type = ShaderType::FRAGMENT;
+			
 		}
 
 		//Stores shader data for each shader type based on what the type variable currently equals.
@@ -103,6 +112,8 @@ Shader ResourceManager::loadShaderFromFile(const char *shaderFile) {
 	//Generates shader.
 	Shader shader;
 	shader.loadShader(vShader, fShader);
+
+
 
 	return shader;
 
@@ -129,7 +140,7 @@ Textures ResourceManager::loadTextureFromFile(const char *texFile, bool alpha) {
 	unsigned char *data = stbi_load(texFile, &width, &height, &nrChannels, 0);
 
 
-	texture.generate(width, height, data);
+	texture.generate(width, height, data, GL_RGB, GL_RGB);
 
 	stbi_image_free(data);
 

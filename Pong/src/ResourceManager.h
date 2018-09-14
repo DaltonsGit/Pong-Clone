@@ -14,7 +14,7 @@ class ResourceManager {
 public:
 	static std::map<std::string, Shader> m_Shaders;
 	static std::map<std::string, Textures> m_Textures;
-	static std::map<char, Text>m_Characters;
+	static std::map<char, Text> m_Characters;
 
 	static void loadShader(const char *shaderFile, std::string name);
 	static Shader getShader(std::string name);
@@ -24,8 +24,6 @@ public:
 
 	static void loadCharacters(bool alpha);
 	static Text getCharacters(char letter);
-
-	//static void clear();
 
 private:
 	ResourceManager () {}

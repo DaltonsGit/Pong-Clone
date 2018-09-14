@@ -4,77 +4,10 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
-
-#define STB_IMAGE_IMPLEMENTATION
-//#include "stb_image.h"
-
-
 
 #include "Renderer.h"
-
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "Shader.h"
-#include "Textures.h"
 #include "Game.h"
 
-
-
-
-/*struct ShaderProgramSource {
-
-	std::string VertexSource;
-	std::string FragmentSource;
-
-};
-
-
-static ShaderProgramSource parseShader(const std::string& filepath) {
-
-	std::ifstream stream(filepath);
-
-	enum class ShaderType {
-
-		NONE = -1,
-		VERTEX = 0,
-		FRAGMENT = 1
-
-	};
-
-
-	std::string line;
-	std::stringstream ss[2];
-	ShaderType type = ShaderType::NONE;
-
-	while (getline(stream, line)) {
-
-		if (line.find("#shader") != std::string::npos) {
-
-			if (line.find("vertex") != std::string::npos)
-				type = ShaderType::VERTEX;
-			else if (line.find("fragment") != std::string::npos)
-				type = ShaderType::FRAGMENT;
-		}
-
-		else {
-
-			ss[(int)type] << line << '\n';
-
-		}
-
-	}
-
-
-	return{ ss[0].str(), ss[1].str() };
-
-}*/
 
 
 void key_CallBack(GLFWwindow *window, int key, int scancode, int action, int mode);
@@ -109,8 +42,6 @@ int main(void)
 
 	glfwSetKeyCallback(window, key_CallBack);
 
-	//glfwSwapInterval(1);
-
 
 	if (glewInit() != GLEW_OK) {
 
@@ -120,49 +51,18 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	
-
-	//Shader shader("res/shaders/Basic.shader");
-
-		//ShaderProgramSource source = parseShader("res/shaders/Basic.shader");
-		//std::cout << source.VertexSource << std::endl;
-		//::cout << source.FragmentSource << std::endl;
-
-		
-
-		//Shader shader(source.VertexSource, source.FragmentSource);
-	//shader.loadShader();
-
-
-		/*int width; 
-		int height;
-		int nrChannels;
-
-		unsigned char *data = stbi_load("D:/Programming/C++/Pong/Pong-Clone/Pong/res/textures/awesome_face.jpg", &width, &height, &nrChannels, 0);
-		*/
-			
-
-		//Textures wood;
-
-		//wood.generate(width, height, data);
-
-		//stbi_image_free(data);
-
-		//Renderer square(shader);
-		//Renderer square2(shader);
-
-
-	//Game game(800, 600);
 	game.setUpGame();
 	std::cout << "Finished setup" << std::endl;
 
 		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		float timeChange = 0.0f;
 		float lastFrame = 0.0f;
 
 		/* Loop until the user closes the window */
-		while (!glfwWindowShouldClose(window))
+		while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_Q) != GLFW_PRESS)
 		{
 
 
@@ -174,25 +74,11 @@ int main(void)
 
 			game.processInput(timeChange);
 			game.update(timeChange);
-			//game.processInput(timeChange);
-			//game.update(timeChange);
-			//game.ballMovement(timeChange);
-
+		
 			/* Render here */
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			game.render();
-
-			/*if (game.getGameOver() == true) {
-
-
-				glfwDestroyWindow(window);
-
-			}*/
-
-
-			//square.drawEntity(wood, glm::vec2(774, 225), glm::vec2(25, 75), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-			//square2.drawEntity(wood, glm::vec2(0, 225), glm::vec2(25, 75), 0.0, glm::vec3(0.0f, 0.0f, 0.0f));
 
 			
 			
@@ -203,7 +89,6 @@ int main(void)
 			glfwPollEvents();
 		}
 
-		//glDeleteProgram(shader);
 
 	
 	glfwTerminate();

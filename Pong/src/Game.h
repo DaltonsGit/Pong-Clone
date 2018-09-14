@@ -1,18 +1,21 @@
 #pragma once
 
-//#include <GL/glew.h>
-//#include <GLFW/glfw3.h>
 
 
 #include "ResourceManager.h"
 #include "Renderer.h"
 #include "Textures.h"
 #include "Shader.h"
-//#include "Entities.h"
+
 #include "Ball.h"
 #include "Paddles.h"
 #include "Text.h"
 
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
+#define STB_IMAGE_IMPLEMENTATION
 
 
 const glm::vec2 player_Size(25, 100);
@@ -31,7 +34,6 @@ public:
 	void update(float dt);
 
 	void render();
-	bool getGameOver();
 
 
 
@@ -39,27 +41,19 @@ private:
 	unsigned int m_Width;
 	unsigned int m_Height;
 
-	float bd = 1.0;
-
-	int winnerScore = 2;
-
-	bool gameOver = false;
-
-	//const glm::vec2 player_Size = glm::vec2(200, 75);
-
 	Renderer *m_Renderer = new Renderer();
 	Paddles *player1;
 	Paddles *player2;
 	Ball *ball;
 
-	Ball *test;
-
 	bool firstRound = false;
-	bool p1Won = false;
-	bool p2Won = false;
 
 	void checkCollision();
 
 	void whoScored();
+
+
+
+
 
 };
